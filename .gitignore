@@ -1,0 +1,32 @@
+*~
+*.log
+
+# ignore Tex compilation files
+*.aux
+*.gz
+*.toc
+*.out
+
+# ignore Modelica backups
+*.bak-mo
+
+#ignore Modelica and Matlab results
+*.mat
+
+# ignore Modelica compilation files
+dsfinal.txt
+dsin.txt
+dslog.txt
+dsmodel.c
+dymosim.exe
+dymosim.exp
+dymosim.lib
+buildlog.txt
+dymosim.dll
+dsmodel.mof
+dsmodel.obj
+dsmodelFnc*
+initSim.mat
+Distribution
+dsmodelext1.c
+      

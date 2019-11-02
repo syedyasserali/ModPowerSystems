@@ -1,0 +1,86 @@
+variables:
+  DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
+  DOCKER_IMAGE_DEV: modci-om
+
+stages:
+  - build
+  - test
+
+Docker_Build:
+ stage: build
+ script:
+  - git clone https://git.rwth-aachen.de/acs/public/simulation/reference-results.git
+  - git clone https://git.rwth-aachen.de/acs/public/villas/dataprocessing.git
+  - git clone git@git.rwth-aachen.de:acs/core/simulation/python-for-modelica.git
+  - docker build -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
+ artifacts:
+  paths:
+  - dataprocessing/
+  - python-for-modelica/
+  - reference-results/
+ tags:
+   - shell
+
+test:Slack_PiLine_PQLoad:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.BasicGrids.Slack_PiLine_PQLoad -r reference-results/Neplan/BasicGrids/Slack_PiLine_PQLoad.rlf
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+   - docker
+
+test:Slack_RxLine_PQLoad:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.BasicGrids.Slack_RxLine_PQLoad -r reference-results/Neplan/BasicGrids/Slack_RxLine_PQLoad.rlf
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+   - docker
+
+test:Slack_RxLine_PVNode:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.BasicGrids.Slack_RxLine_PVNode -r reference-results/Neplan/BasicGrids/Slack_RxLine_PVNode.rlf
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+   - docker
+
+test:Slack_Tra_Line_PQLoad:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.BasicGrids.Slack_Tra_Line_PQLoad -r reference-results/Neplan/BasicGrids/Slack_Tra_Line_PQLoad.rlf
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+   - docker
+
+test:Slack_TraTapChanger_PQLoad:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.BasicGrids.Slack_TraTapChanger_PQLoad -r reference-results/Neplan/BasicGrids/Slack_TraTapChanger_Load_Sample.rlf
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+   - docker
+
+test:Slack_ZLoad:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.BasicGrids.Slack_ZLoad -r reference-results/Neplan/BasicGrids/Slack_ZLoad.rlf
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+   - docker
+
+test:WSCC_9Bus_PQLoad:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.ReferenceGrids.WSCC_9Bus_PQLoad -r reference-results/Simulink/WSCC-9bus/WSCC_9bus_steadystate.rep
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+  - docker
+
+test:IEEE_European_LV_HouseholdLoad:
+ stage: test
+ script:
+  - python3 ./python-for-modelica/Scripts/ModPowerSystemsCI/ValidationBasicGrids.py -p ./ -n ModPowerSystems.PhasorSinglePhase.Examples.ReferenceGrids.IEEE_European_LV_HouseholdLoad -r reference-results/Neplan/ReferenceGrids/IEEE_EU_LV_noTransformer.rlf
+ image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+ tags:
+  - docker
